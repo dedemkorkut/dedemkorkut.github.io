@@ -21,7 +21,111 @@
       color: #f8fafc;
       text-align: center;
       padding: 1.5rem;
+      overflow-x: hidden;
     }
+
+    /* Video Intro Overlay */
+    #intro-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    #intro-overlay.fade-out {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    #intro-video {
+      width: 100%;
+      height: 100%;
+      max-width: 100vw;
+      max-height: 100vh;
+      object-fit: contain;
+      background: #000;
+    }
+
+    /* Skip Button */
+    .skip-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 10001;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      padding: 0.6rem 1.4rem;
+      border-radius: 9999px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .skip-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    /* Play prompt overlay if browser blocks autoplay with sound */
+    #play-prompt {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 10000;
+      cursor: pointer;
+    }
+
+    .play-btn-circle {
+      width: 80px;
+      height: 80px;
+      background: rgba(56, 189, 248, 0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.5);
+      margin-bottom: 1rem;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    #play-prompt:hover .play-btn-circle {
+      transform: scale(1.08);
+      background: #38bdf8;
+    }
+
+    .play-btn-circle svg {
+      width: 36px;
+      height: 36px;
+      fill: #0f172a;
+      margin-left: 4px;
+    }
+
+    .play-prompt-text {
+      color: #f8fafc;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    /* Main Site Content */
     .card {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -31,7 +135,20 @@
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
       max-width: 480px;
       width: 100%;
+      animation: cardEnter 0.9s ease forwards;
     }
+
+    @keyframes cardEnter {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
     h1 {
       font-size: 2.75rem;
       font-weight: 800;
@@ -60,10 +177,84 @@
   </style>
 </head>
 <body>
+
+  <!-- Video Intro Overlay -->
+  <div id="intro-overlay">
+    <button class="skip-btn" id="skip-btn" title="Girişi Geç">
+      <span>Geç</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5 4 15 12 5 20 5 4"></polygon>
+        <line x1="19" y1="5" x2="19" y2="19"></line>
+      </svg>
+    </button>
+
+    <div id="play-prompt">
+      <div class="play-btn-circle">
+        <svg viewBox="0 0 24 24">
+          <polygon points="6 3 20 12 6 21 6 3"></polygon>
+        </svg>
+      </div>
+      <span class="play-prompt-text">Başlatmak için dokunun</span>
+    </div>
+
+    <video id="intro-video" src="dedekorkut.mp4" playsinline preload="auto"></video>
+  </div>
+
+  <!-- Ana Sayfa İçeriği -->
   <div class="card">
     <h1>Merhaba Dünya</h1>
     <p>dedemkorkut.github.io yapım aşamasında.</p>
     <span class="badge">Dede Korkut</span>
   </div>
+
+  <script>
+    const overlay = document.getElementById('intro-overlay');
+    const video = document.getElementById('intro-video');
+    const skipBtn = document.getElementById('skip-btn');
+    const playPrompt = document.getElementById('play-prompt');
+
+    let closed = false;
+    function hideIntro() {
+      if (closed) return;
+      closed = true;
+      overlay.classList.add('fade-out');
+      setTimeout(() => {
+        video.pause();
+        overlay.style.display = 'none';
+      }, 800);
+    }
+
+    // Video bitince otomatik kaybol
+    video.addEventListener('ended', hideIntro);
+
+    // Geç butonuna tıklanınca kaybol
+    skipBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      hideIntro();
+    });
+
+    // Otomatik oynatmayı başlatmayı dene
+    function startPlayback() {
+      playPrompt.style.display = 'none';
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          // Tarayıcı sesli otomatik oynatmaya izin vermezse dokunma ekranını göster
+          playPrompt.style.display = 'flex';
+        });
+      }
+    }
+
+    // Kullanıcı ekrana dokununca sesiyle başlasın
+    playPrompt.addEventListener('click', () => {
+      video.muted = false;
+      startPlayback();
+    });
+
+    // Sayfa yüklenince başlat
+    window.addEventListener('DOMContentLoaded', () => {
+      startPlayback();
+    });
+  </script>
 </body>
 </html>
