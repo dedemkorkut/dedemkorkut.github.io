@@ -222,13 +222,13 @@
 
   <!-- Video Overlay -->
   <div id="intro-overlay">
-    <button class="skip-btn" id="skip-btn" title="Videoyu Geç ve Ana Sayfaya Git">
+    <a href="index.html" class="skip-btn" id="skip-btn" title="E-Dergiyi Aç">
       <span>Dergiyi Aç</span>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polygon points="5 4 15 12 5 20 5 4"></polygon>
         <line x1="19" y1="5" x2="19" y2="19"></line>
       </svg>
-    </button>
+    </a>
 
     <div id="play-prompt">
       <div class="play-btn-circle">
@@ -293,10 +293,6 @@
     }
 
     video.addEventListener('ended', hideIntro);
-    skipBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      hideIntro();
-    });
     replayBtn.addEventListener('click', showIntro);
 
     function startPlayback() {
