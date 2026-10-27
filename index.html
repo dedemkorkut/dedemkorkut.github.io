@@ -29,6 +29,7 @@
     #viewport {
       width: 100vw;
       height: 100vh;
+      height: 100dvh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -36,12 +37,18 @@
       overflow: hidden;
     }
 
+    /* Book Wrapper: Exact container matching the visual book dimensions */
     #book-wrapper {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
       box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.85);
+    }
+
+    #book-container {
+      width: 100%;
+      height: 100%;
     }
 
     #book {
@@ -119,13 +126,13 @@
       color: #fff;
     }
 
-    /* --- MASAÜSTÜ: Butonlar ekranın sol ve sağ ortasında, sayaç aşağı ortada --- */
+    /* --- MASAÜSTÜ: Butonlar ekranın sol ve sağ kenarlarının ortasında --- */
     .bottom-nav-dock {
-      display: contents; /* Masaüstünde sarmalayıcı yokmuş gibi davranır */
+      display: contents;
     }
 
     .floating-nav {
-      position: absolute;
+      position: fixed;
       top: 50%;
       transform: translateY(-50%);
       width: 52px;
@@ -170,7 +177,7 @@
     }
 
     .bottom-floating-indicator {
-      position: absolute;
+      position: fixed;
       bottom: 1.2rem;
       left: 50%;
       transform: translateX(-50%);
@@ -214,34 +221,35 @@
       to { transform: rotate(360deg); }
     }
 
-    /* --- SADECE MOBİL: Butonlar ekranın aşağı orta kısmına yerleşir --- */
+    /* --- SADECE MOBİL: Butonlar tam görselin içinde kalacak şekilde görselin alt ortasında --- */
     @media (max-width: 768px) {
       .top-floating-bar {
         top: 0.75rem;
         right: 0.75rem;
       }
 
-      /* Mobilde dock görünümü: Oklar ve sayaç yan yana aşağı ortada */
+      /* Görselin alt ortasına yerleşen şık dock */
       .bottom-nav-dock {
         display: flex;
         position: absolute;
-        bottom: 0.85rem;
+        bottom: 16px;
         left: 50%;
         transform: translateX(-50%);
         align-items: center;
         gap: 0.55rem;
         z-index: 60;
+        pointer-events: auto;
       }
 
       .floating-nav {
         position: static;
         transform: none;
-        width: 42px;
-        height: 42px;
-        opacity: 0.85;
-        background: rgba(15, 23, 42, 0.65);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+        width: 40px;
+        height: 40px;
+        opacity: 0.9;
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
       }
 
       .floating-nav:hover {
@@ -263,12 +271,12 @@
       .bottom-floating-indicator {
         position: static;
         transform: none;
-        opacity: 0.85;
-        background: rgba(15, 23, 42, 0.65);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        padding: 0.4rem 0.85rem;
+        opacity: 0.9;
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 0.38rem 0.85rem;
         font-size: 0.78rem;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
       }
     }
   </style>
@@ -303,25 +311,27 @@
     </div>
 
     <!-- Flipbook Container Wrapper -->
-    <div id="book-wrapper"></div>
+    <div id="book-wrapper">
+      <div id="book-container"></div>
 
-    <!-- Navigation Controls (Masaüstünde kenarlarda, mobilde aşağı ortada) -->
-    <div class="bottom-nav-dock">
-      <button class="floating-nav prev" id="arrow-prev" title="Önceki Sayfa (←)">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
-      </button>
+      <!-- Navigation Controls (Masaüstünde kenarlarda sabit, mobilde tam görselin alt ortasında) -->
+      <div class="bottom-nav-dock" id="nav-dock">
+        <button class="floating-nav prev" id="arrow-prev" title="Önceki Sayfa (←)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
 
-      <div class="bottom-floating-indicator" id="page-indicator">
-        Kapak
+        <div class="bottom-floating-indicator" id="page-indicator">
+          Kapak
+        </div>
+
+        <button class="floating-nav next" id="arrow-next" title="Sonraki Sayfa (→)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
       </div>
-
-      <button class="floating-nav next" id="arrow-next" title="Sonraki Sayfa (→)">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
-      </button>
     </div>
   </div>
 
@@ -332,6 +342,7 @@
     let pageFlip = null;
 
     const bookWrapper = document.getElementById('book-wrapper');
+    const bookContainer = document.getElementById('book-container');
     const loadingEl = document.getElementById('loading');
     const arrowPrev = document.getElementById('arrow-prev');
     const arrowNext = document.getElementById('arrow-next');
@@ -352,7 +363,7 @@
             </div>
           </div>`;
       }
-      bookWrapper.innerHTML = `<div id="book">${pagesHtml}</div>`;
+      bookContainer.innerHTML = `<div id="book">${pagesHtml}</div>`;
       return document.getElementById('book');
     }
 
@@ -368,13 +379,13 @@
       const isPortrait = (winW < winH) || (winW < 768);
 
       // Safe margins:
-      // Mobile: bottom dock needs padding (padY: 65, padX: 20)
-      // Desktop: arrows are on sides (padY: 40, padX: 70)
+      // Mobile: allows maximum book size since buttons sit right on the bottom margin of the visual
+      // Desktop: leaves margins for arrows on sides
       const padX = isPortrait ? 20 : 70;
-      const padY = isPortrait ? 65 : 40;
+      const padY = isPortrait ? 30 : 40;
 
       const availW = Math.max(260, winW - padX);
-      const availH = Math.max(360, winH - padY);
+      const availH = Math.max(380, winH - padY);
 
       let pWidth, pHeight;
 
@@ -449,6 +460,10 @@
 
       const bookEl = renderBookHTML();
       const dims = calcDimensions();
+
+      // Ensure bookWrapper matches exact dimensions so dock sits perfectly inside the visual
+      bookWrapper.style.width = (dims.isPortrait ? dims.width : (dims.width * 2)) + 'px';
+      bookWrapper.style.height = dims.height + 'px';
 
       pageFlip = new St.PageFlip(bookEl, {
         width: dims.width,
