@@ -19,7 +19,7 @@
       overflow: hidden;
       background: #070a12;
       background-image: 
-        radial-gradient(ellipse at 50% 50%, rgba(30, 41, 59, 0.45) 0%, #030712 100%);
+        radial-gradient(ellipse at 50% 50%, rgba(30, 41, 59, 0.4) 0%, #030712 100%);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       user-select: none;
       -webkit-user-select: none;
@@ -36,15 +36,12 @@
       overflow: hidden;
     }
 
-    /* Book Wrapper */
     #book-wrapper {
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.9);
-      opacity: 1;
-      transition: opacity 0.2s ease;
+      box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.85);
     }
 
     #book {
@@ -75,7 +72,7 @@
       pointer-events: none;
     }
 
-    /* Floating Navigation Arrows */
+    /* Minimalist Floating Navigation Arrows */
     .floating-nav {
       position: absolute;
       top: 50%;
@@ -83,22 +80,22 @@
       width: 52px;
       height: 52px;
       border-radius: 50%;
-      background: rgba(15, 23, 42, 0.55);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(15, 23, 42, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       color: rgba(255, 255, 255, 0.85);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(10px);
       z-index: 50;
-      transition: all 0.22s ease;
-      opacity: 0.65;
+      transition: all 0.25s ease;
+      opacity: 0.6;
     }
 
     .floating-nav:hover {
       opacity: 1;
-      background: rgba(56, 189, 248, 0.3);
+      background: rgba(56, 189, 248, 0.25);
       border-color: #38bdf8;
       color: #fff;
       transform: translateY(-50%) scale(1.1);
@@ -112,26 +109,26 @@
     .floating-nav.next { right: 1.5rem; }
 
     .floating-nav:disabled {
-      opacity: 0.12;
+      opacity: 0.15;
       pointer-events: none;
     }
 
-    /* Top Floating Action Bar */
+    /* Minimal Floating Top Bar (Video & Fullscreen) */
     .top-floating-bar {
       position: absolute;
       top: 1rem;
       right: 1.25rem;
       display: flex;
       align-items: center;
-      gap: 0.65rem;
+      gap: 0.6rem;
       z-index: 60;
     }
 
     .subtle-btn {
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      color: rgba(255, 255, 255, 0.9);
-      padding: 0.5rem 0.95rem;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.85);
+      padding: 0.5rem 0.9rem;
       border-radius: 9999px;
       font-size: 0.85rem;
       font-weight: 500;
@@ -139,50 +136,48 @@
       display: flex;
       align-items: center;
       gap: 0.45rem;
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(10px);
       transition: all 0.2s ease;
       text-decoration: none;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
     .subtle-btn:hover {
-      background: rgba(56, 189, 248, 0.25);
+      background: rgba(56, 189, 248, 0.2);
       border-color: #38bdf8;
       color: #fff;
       transform: translateY(-1px);
     }
 
     .subtle-btn.video-btn {
-      background: rgba(56, 189, 248, 0.18);
-      border-color: rgba(56, 189, 248, 0.4);
+      background: rgba(56, 189, 248, 0.15);
+      border-color: rgba(56, 189, 248, 0.3);
       color: #38bdf8;
-      font-weight: 600;
     }
 
     .subtle-btn.video-btn:hover {
-      background: rgba(56, 189, 248, 0.35);
+      background: rgba(56, 189, 248, 0.3);
       color: #fff;
-      box-shadow: 0 4px 18px rgba(56, 189, 248, 0.45);
     }
 
-    /* Subtle Bottom Page Indicator */
+    /* Minimal Subtle Page Counter at bottom center */
     .bottom-floating-indicator {
       position: absolute;
       bottom: 1.2rem;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: rgba(255, 255, 255, 0.75);
-      padding: 0.35rem 0.95rem;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.7);
+      padding: 0.35rem 0.9rem;
       border-radius: 9999px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 500;
       letter-spacing: 0.03em;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(8px);
       pointer-events: none;
       z-index: 50;
-      opacity: 0.75;
+      opacity: 0.65;
     }
 
     /* Loading Spinner */
@@ -191,16 +186,15 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.85rem;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 0.9rem;
-      z-index: 70;
-      pointer-events: none;
+      gap: 0.8rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.88rem;
+      z-index: 40;
     }
 
     .spinner {
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       border: 3px solid rgba(56, 189, 248, 0.2);
       border-top-color: #38bdf8;
       border-radius: 50%;
@@ -213,8 +207,8 @@
 
     @media (max-width: 768px) {
       .floating-nav {
-        width: 42px;
-        height: 42px;
+        width: 40px;
+        height: 40px;
       }
       .floating-nav.prev { left: 0.4rem; }
       .floating-nav.next { right: 0.4rem; }
@@ -335,7 +329,7 @@
         }
       } else {
         // Two pages side by side
-        const spreadRatio = 2 * pageRatio;
+        const spreadRatio = 2 * pageRatio; // ≈ 1.3333
         pHeight = availH;
         let spreadW = pHeight * spreadRatio;
         if (spreadW > availW) {
@@ -406,9 +400,9 @@
         startPage: startPageIndex,
         drawShadow: true,
         maxShadowOpacity: 0.5,
-        flippingTime: 650,
+        flippingTime: 700,
         useMouseEvents: true,
-        swipeDistance: 25,
+        swipeDistance: 30,
         clickEventForward: true
       });
 
