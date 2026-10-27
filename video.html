@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dede Korkut - Tanıtım Videosu</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #f8fafc;
+      text-align: center;
+      padding: 1.5rem;
+      overflow-x: hidden;
+    }
+
+    /* Video Intro Overlay */
+    #intro-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    #intro-overlay.fade-out {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    #intro-video {
+      width: 100%;
+      height: 100%;
+      max-width: 100vw;
+      max-height: 100vh;
+      object-fit: contain;
+      background: #000;
+    }
+
+    /* Skip / Replay Button */
+    .skip-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 10001;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      padding: 0.6rem 1.4rem;
+      border-radius: 9999px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+    }
+
+    .skip-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    /* Play prompt overlay if browser blocks autoplay with sound */
+    #play-prompt {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 10000;
+      cursor: pointer;
+    }
+
+    .play-btn-circle {
+      width: 80px;
+      height: 80px;
+      background: rgba(56, 189, 248, 0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.5);
+      margin-bottom: 1rem;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    #play-prompt:hover .play-btn-circle {
+      transform: scale(1.08);
+      background: #38bdf8;
+    }
+
+    .play-btn-circle svg {
+      width: 36px;
+      height: 36px;
+      fill: #0f172a;
+      margin-left: 4px;
+    }
+
+    .play-prompt-text {
+      color: #f8fafc;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    /* Main Site Content */
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 3rem 2.5rem;
+      border-radius: 1.25rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      max-width: 480px;
+      width: 100%;
+      animation: cardEnter 0.9s ease forwards;
+    }
+
+    @keyframes cardEnter {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(to right, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p {
+      color: #94a3b8;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+      color: #fff;
+      padding: 0.85rem 1.75rem;
+      border-radius: 9999px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.4);
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 25px -5px rgba(56, 189, 248, 0.6);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e2e8f0;
+      padding: 0.75rem 1.5rem;
+      border-radius: 9999px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Video Overlay -->
+  <div id="intro-overlay">
+    <button class="skip-btn" id="skip-btn" title="Videoyu Geç ve Ana Sayfaya Git">
+      <span>Dergiyi Aç</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5 4 15 12 5 20 5 4"></polygon>
+        <line x1="19" y1="5" x2="19" y2="19"></line>
+      </svg>
+    </button>
+
+    <div id="play-prompt">
+      <div class="play-btn-circle">
+        <svg viewBox="0 0 24 24">
+          <polygon points="6 3 20 12 6 21 6 3"></polygon>
+        </svg>
+      </div>
+      <span class="play-prompt-text">Videoyu başlatmak için dokunun</span>
+    </div>
+
+    <video id="intro-video" src="dedekorkut.mp4" playsinline preload="auto"></video>
+  </div>
+
+  <!-- Video bittikten sonra görünen kart -->
+  <div class="card">
+    <h1>Dede Korkut</h1>
+    <p>Tanıtım videosunu izlediniz. E-dergiyi incelemek için ana sayfaya geçebilirsiniz.</p>
+    
+    <div class="btn-group">
+      <a href="index.html" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+        </svg>
+        <span>E-Dergiyi Oku</span>
+      </a>
+
+      <button id="replay-btn" class="btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="1 4 1 10 7 10"></polyline>
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+        </svg>
+        <span>Videoyu Tekrar Oynat</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const overlay = document.getElementById('intro-overlay');
+    const video = document.getElementById('intro-video');
+    const skipBtn = document.getElementById('skip-btn');
+    const playPrompt = document.getElementById('play-prompt');
+    const replayBtn = document.getElementById('replay-btn');
+
+    let closed = false;
+    function hideIntro() {
+      if (closed) return;
+      closed = true;
+      overlay.classList.add('fade-out');
+      setTimeout(() => {
+        video.pause();
+        overlay.style.display = 'none';
+      }, 800);
+    }
+
+    function showIntro() {
+      closed = false;
+      overlay.style.display = 'flex';
+      overlay.classList.remove('fade-out');
+      video.currentTime = 0;
+      startPlayback();
+    }
+
+    video.addEventListener('ended', hideIntro);
+    skipBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      hideIntro();
+    });
+    replayBtn.addEventListener('click', showIntro);
+
+    function startPlayback() {
+      playPrompt.style.display = 'none';
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          playPrompt.style.display = 'flex';
+        });
+      }
+    }
+
+    playPrompt.addEventListener('click', () => {
+      video.muted = false;
+      startPlayback();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      startPlayback();
+    });
+  </script>
+</body>
+</html>
