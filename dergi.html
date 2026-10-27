@@ -221,18 +221,19 @@
       to { transform: rotate(360deg); }
     }
 
-    /* --- SADECE MOBİL: Butonlar tam görselin içinde kalacak şekilde görselin alt ortasında --- */
+    /* --- SADECE MOBİL: Butonlar görselin dışında ama hemen altında yer alır --- */
     @media (max-width: 768px) {
       .top-floating-bar {
         top: 0.75rem;
         right: 0.75rem;
       }
 
-      /* Görselin alt ortasına yerleşen şık dock */
+      /* Görselin dışında ama hemen altında konumlanan dock */
       .bottom-nav-dock {
         display: flex;
         position: absolute;
-        bottom: 16px;
+        top: calc(100% + 12px);
+        bottom: auto;
         left: 50%;
         transform: translateX(-50%);
         align-items: center;
@@ -314,7 +315,7 @@
     <div id="book-wrapper">
       <div id="book-container"></div>
 
-      <!-- Navigation Controls (Masaüstünde kenarlarda sabit, mobilde tam görselin alt ortasında) -->
+      <!-- Navigation Controls (Masaüstünde kenarlarda sabit, mobilde görselin hemen altında) -->
       <div class="bottom-nav-dock" id="nav-dock">
         <button class="floating-nav prev" id="arrow-prev" title="Önceki Sayfa (←)">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -379,10 +380,10 @@
       const isPortrait = (winW < winH) || (winW < 768);
 
       // Safe margins:
-      // Mobile: allows maximum book size since buttons sit right on the bottom margin of the visual
+      // Mobile: leaves comfortable margin for buttons sitting just below the visual image
       // Desktop: leaves margins for arrows on sides
       const padX = isPortrait ? 20 : 70;
-      const padY = isPortrait ? 30 : 40;
+      const padY = isPortrait ? 75 : 40;
 
       const availW = Math.max(260, winW - padX);
       const availH = Math.max(380, winH - padY);
@@ -461,7 +462,7 @@
       const bookEl = renderBookHTML();
       const dims = calcDimensions();
 
-      // Ensure bookWrapper matches exact dimensions so dock sits perfectly inside the visual
+      // Ensure bookWrapper matches exact dimensions so dock sits perfectly below the visual
       bookWrapper.style.width = (dims.isPortrait ? dims.width : (dims.width * 2)) + 'px';
       bookWrapper.style.height = dims.height + 'px';
 
