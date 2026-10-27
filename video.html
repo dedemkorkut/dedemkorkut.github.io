@@ -143,36 +143,92 @@
       transform: translateY(0);
     }
 
-    /* iPhone Silent Switch Reminder Toast */
-    .silent-notice {
+    /* Big Center Play Button Overlay */
+    .big-play-btn {
       position: absolute;
-      top: calc(4.8rem + env(safe-area-inset-top, 0px));
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%);
-      background: rgba(15, 23, 42, 0.92);
-      border: 1px solid rgba(56, 189, 248, 0.45);
-      color: #e2e8f0;
-      padding: 0.6rem 1.15rem;
-      border-radius: 9999px;
-      font-size: 0.82rem;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-      z-index: 10001;
+      transform: translate(-50%, -50%) scale(1);
+      z-index: 600;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.85rem;
+      transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      touch-action: manipulation;
+    }
+
+    .big-play-btn.hidden {
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      text-align: center;
-      max-width: 90vw;
-      width: max-content;
+      transform: translate(-50%, -50%) scale(0.75);
     }
 
-    .silent-notice.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
+    .big-play-circle {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(15, 23, 42, 0.88) 0%, rgba(3, 7, 18, 0.96) 100%);
+      border: 2.5px solid #38bdf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 35px rgba(56, 189, 248, 0.55), 0 10px 30px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      animation: bigPulseGlow 2.2s infinite;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
-    .silent-notice b {
-      color: #38bdf8;
+    .big-play-circle svg {
+      width: 40px;
+      height: 40px;
+      fill: #38bdf8;
+      margin-left: 5px;
+      transition: fill 0.2s ease, transform 0.2s ease;
+    }
+
+    .big-play-text {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: 0.5px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      padding: 0.45rem 1.25rem;
+      border-radius: 9999px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+      transition: all 0.2s ease;
+    }
+
+    .big-play-btn:hover .big-play-circle {
+      transform: scale(1.08);
+      border-color: #7dd3fc;
+      box-shadow: 0 0 45px rgba(56, 189, 248, 0.8), 0 10px 30px rgba(0, 0, 0, 0.8);
+    }
+
+    .big-play-btn:hover .big-play-circle svg {
+      fill: #ffffff;
+      transform: scale(1.05);
+    }
+
+    .big-play-btn:hover .big-play-text {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: #38bdf8;
+      color: #ffffff;
+    }
+
+    .big-play-btn:active {
+      transform: translate(-50%, -50%) scale(0.94);
+    }
+
+    @keyframes bigPulseGlow {
+      0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7), 0 10px 30px rgba(0, 0, 0, 0.7); }
+      70% { box-shadow: 0 0 0 18px rgba(56, 189, 248, 0), 0 10px 30px rgba(0, 0, 0, 0.7); }
+      100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0), 0 10px 30px rgba(0, 0, 0, 0.7); }
     }
 
     /* Big Center Indicator (Play / Pause Feedback) */
@@ -350,10 +406,18 @@
         padding: 0.5rem 1.1rem;
         font-size: 0.88rem;
       }
-      .silent-notice {
-        top: calc(3.6rem + env(safe-area-inset-top, 0px));
-        font-size: 0.76rem;
-        padding: 0.5rem 0.9rem;
+      .big-play-circle {
+        width: 76px;
+        height: 76px;
+      }
+      .big-play-circle svg {
+        width: 34px;
+        height: 34px;
+        margin-left: 4px;
+      }
+      .big-play-text {
+        font-size: 0.88rem;
+        padding: 0.4rem 1.05rem;
       }
       .bottom-bar {
         padding-bottom: calc(0.8rem + env(safe-area-inset-bottom, 0px));
@@ -373,10 +437,20 @@
 
   <!-- Fullscreen Video Container -->
   <div id="video-wrapper">
-    <video id="main-video" src="dedekorkut.mp4" playsinline webkit-playsinline x5-playsinline preload="auto"></video>
+    <video id="main-video" src="dedekorkut.mp4" poster="video_poster.jpg" playsinline webkit-playsinline x5-playsinline preload="auto"></video>
 
     <!-- Tap Zone for Screen Touch Play/Stop/Unmute -->
-    <div id="tap-zone" title="Videoya dokunarak sesi açabilir, durdurup başlatabilirsiniz"></div>
+    <div id="tap-zone" title="Videoya dokunarak durdurup başlatabilirsiniz"></div>
+
+    <!-- Big Center Play Button Overlay -->
+    <div class="big-play-btn" id="big-play-btn" role="button" aria-label="Videoyu Başlat">
+      <div class="big-play-circle">
+        <svg viewBox="0 0 24 24">
+          <polygon points="6 3 20 12 6 21 6 3"></polygon>
+        </svg>
+      </div>
+      <span class="big-play-text">Videoyu Oynat</span>
+    </div>
 
     <!-- Floating Sound Button (Top-Left) -->
     <button class="sound-btn pulse" id="btn-sound" title="Sesi Aç / Kapat">
@@ -400,11 +474,6 @@
         <line x1="19" y1="5" x2="19" y2="19"></line>
       </svg>
     </a>
-
-    <!-- iPhone Silent Switch Reminder Toast -->
-    <div class="silent-notice" id="silent-notice">
-      <span>💡 Ses gelmiyorsa iPhone'unuzun sol tarafındaki <b>Sessiz (Zil)</b> anahtarını açın.</span>
-    </div>
 
     <!-- Center Indicator (Play / Pause / Sound feedback) -->
     <div class="center-indicator" id="center-indicator">
@@ -455,12 +524,12 @@
   <script>
     const video = document.getElementById('main-video');
     const tapZone = document.getElementById('tap-zone');
+    const bigPlayBtn = document.getElementById('big-play-btn');
     const skipBtn = document.getElementById('skip-btn');
     const btnSound = document.getElementById('btn-sound');
     const iconSoundOff = document.getElementById('icon-sound-off');
     const iconSoundOn = document.getElementById('icon-sound-on');
     const soundLabel = document.getElementById('sound-label');
-    const silentNotice = document.getElementById('silent-notice');
     const centerIndicator = document.getElementById('center-indicator');
     const indicatorPlay = document.getElementById('icon-indicator-play');
     const indicatorPause = document.getElementById('icon-indicator-pause');
@@ -474,7 +543,6 @@
 
     let indicatorTimeout = null;
     let barHideTimeout = null;
-    let noticeTimeout = null;
 
     function formatTime(seconds) {
       if (isNaN(seconds) || seconds < 0) return '0:00';
@@ -510,14 +578,6 @@
       }
     }
 
-    function showSilentSwitchNotice() {
-      silentNotice.classList.add('show');
-      clearTimeout(noticeTimeout);
-      noticeTimeout = setTimeout(() => {
-        silentNotice.classList.remove('show');
-      }, 5000);
-    }
-
     function updateSoundUI(isUnmuted) {
       if (isUnmuted) {
         btnSound.classList.remove('pulse');
@@ -534,16 +594,11 @@
       }
     }
 
-    // Unmute with iOS WebKit gesture unlock
-    function unmuteVideo() {
+    // Play video with audio (iOS WebKit gesture supported)
+    function playWithSound() {
       video.muted = false;
       video.volume = 1.0;
       updateSoundUI(true);
-
-      if (video.paused) {
-        const p = video.play();
-        if (p !== undefined) p.catch(() => {});
-      }
 
       // Web Audio API unlock for iOS WebKit
       try {
@@ -554,61 +609,64 @@
         }
       } catch (e) {}
 
-      showSilentSwitchNotice();
+      const p = video.play();
+      if (p !== undefined) {
+        p.then(() => {
+          bigPlayBtn.classList.add('hidden');
+          showIndicator('play');
+          showBottomBar();
+        }).catch(() => {
+          // Fallback if unmuted playback is blocked on gesture
+          video.muted = true;
+          updateSoundUI(false);
+          video.play().then(() => {
+            bigPlayBtn.classList.add('hidden');
+            showIndicator('play');
+            showBottomBar();
+          }).catch(() => {});
+        });
+      }
     }
 
-    function muteVideo() {
-      video.muted = true;
-      updateSoundUI(false);
+    function pauseVideo() {
+      video.pause();
+      bigPlayBtn.classList.remove('hidden');
+      showIndicator('pause');
+      showBottomBar();
     }
 
+    function handleScreenTap() {
+      showBottomBar();
+      if (video.paused || video.ended) {
+        endOverlay.classList.remove('active');
+        playWithSound();
+      } else {
+        pauseVideo();
+      }
+    }
+
+    // Sound button toggle
     btnSound.addEventListener('click', (e) => {
       e.stopPropagation();
       if (video.muted) {
-        unmuteVideo();
-        showIndicator('volume');
-      } else {
-        muteVideo();
-      }
-    });
-
-    // Toggle Play / Stop / Unmute on Screen Tap
-    function handleScreenTap() {
-      showBottomBar();
-
-      // If video is muted on mobile, first tap unmuts immediately
-      if (video.muted) {
-        unmuteVideo();
-        showIndicator('volume');
-        if (!video.paused && !video.ended) {
-          return;
-        }
-      }
-
-      if (video.paused || video.ended) {
-        endOverlay.classList.remove('active');
         video.muted = false;
         video.volume = 1.0;
         updateSoundUI(true);
-        const p = video.play();
-        if (p !== undefined) {
-          p.then(() => {
-            showIndicator('play');
-          }).catch(() => {
-            video.muted = true;
-            updateSoundUI(false);
-            video.play().then(() => {
-              showIndicator('play');
-            });
-          });
-        }
+        showIndicator('volume');
+        if (video.paused) playWithSound();
       } else {
-        video.pause();
-        showIndicator('pause');
+        video.muted = true;
+        updateSoundUI(false);
       }
-    }
+    });
 
-    // Mobile Touch & Tap Handling
+    // Big play button tap
+    bigPlayBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      handleScreenTap();
+    });
+
+    // Mobile touch handling
     let touchStartX = 0;
     let touchStartY = 0;
     let touchStartTime = 0;
@@ -636,6 +694,18 @@
       handleScreenTap();
     });
 
+    // Video state sync
+    video.addEventListener('play', () => {
+      bigPlayBtn.classList.add('hidden');
+      updateSoundUI(!video.muted);
+    });
+
+    video.addEventListener('pause', () => {
+      if (!video.ended) {
+        bigPlayBtn.classList.remove('hidden');
+      }
+    });
+
     // Scrubber
     video.addEventListener('timeupdate', () => {
       if (video.duration) {
@@ -657,6 +727,7 @@
 
     // When video ends
     video.addEventListener('ended', () => {
+      bigPlayBtn.classList.add('hidden');
       endOverlay.classList.add('active');
     });
 
@@ -665,13 +736,7 @@
       e.stopPropagation();
       endOverlay.classList.remove('active');
       video.currentTime = 0;
-      video.muted = false;
-      video.volume = 1.0;
-      updateSoundUI(true);
-      video.play().then(() => {
-        showIndicator('play');
-        showBottomBar();
-      });
+      playWithSound();
     });
 
     // Spacebar to play/pause, M to mute/unmute
@@ -693,18 +758,22 @@
 
     // Auto-play attempt on load
     window.addEventListener('DOMContentLoaded', () => {
+      // Try to autoplay with sound (e.g. desktop)
+      video.muted = false;
+      video.volume = 1.0;
       const p = video.play();
       if (p !== undefined) {
         p.then(() => {
-          // Autoplay with audio succeeded (e.g. desktop)
-          video.muted = false;
+          // Autoplay with sound succeeded!
+          bigPlayBtn.classList.add('hidden');
           updateSoundUI(true);
         }).catch(() => {
-          // Autoplay with audio blocked by iOS / mobile browser
-          // Play muted first, but prompt user to unmute
-          video.muted = true;
-          updateSoundUI(false);
-          video.play().catch(() => {});
+          // Autoplay with sound was blocked by mobile browser
+          // Stay paused at poster frame with big play button visible!
+          video.pause();
+          video.currentTime = 0;
+          bigPlayBtn.classList.remove('hidden');
+          updateSoundUI(true);
         });
       }
     });
